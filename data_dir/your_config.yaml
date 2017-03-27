@@ -41,7 +41,7 @@ space_node_threshold: 6442
 update_db_binary:
 
 
-update_db_packages: '/home/andrei/scylladb_src/OTHERS/new_binary/'
+update_db_packages: '/tmp/new_binary/'
 
 es_url: http://ec2-52-87-236-168.compute-1.amazonaws.com:9200
 es_user:
