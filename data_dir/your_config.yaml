@@ -176,6 +176,14 @@ version: !mux
         ami_id_db_scylla: 'ami-8986899e'
         ami_id_loader: 'ami-8986899e'
         ami_id_monitor: 'ami-8986899e'
+    1.6preview:
+        ami_id_db_scylla: 'ami-a3a5bfb4'
+        ami_id_loader: 'ami-3d101f2a'
+        ami_id_monitor: 'ami-3d101f2a'
+    1.6.1:
+        ami_id_db_scylla: 'ami-7ea37568'
+        ami_id_loader: 'ami-3d101f2a'
+        ami_id_monitor: 'ami-3d101f2a'
 
 ami_id_db_scylla_desc: '1.4.0'
 
