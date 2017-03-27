@@ -43,7 +43,7 @@ update_db_binary:
 
 update_db_packages: '/tmp/new_binary/'
 
-es_url: http://ec2-52-90-189-4.compute-1.amazonaws.com:9200
+#es_url: http://ec2-52-90-189-4.compute-1.amazonaws.com:9200
 es_user:
 es_password:
 
