@@ -114,15 +114,18 @@ class PerformanceRegressionTest(ClusterTester):
             else:
                 metrics['setup_details'][p[1]] = p[2]
 
-        versions_output = self.db_cluster.nodes[0].remoter.run('rpm -qa | grep scylla')\
-            .stdout.split('\n')
-        versions = {}
-        for line in versions_output:
-            for package in ['scylla-jmx', 'scylla-server', 'scylla-tools']:
-                match = re.search('(%s-(\S+)-(0.)?([0-9]{8,8}).(\w+).)' % package, line)
-                if match:
-                    versions[package] = {'version': match.group(2), 'date': match.group(4), 'commit_id': match.group(5)}
-
+        if self.db_cluster._ec2_ami_username == 'ubuntu':
+            versions_output = self.db_cluster.nodes[0].remoter.run('dpkg --list| grep "scylla\|cassandra"').stdout.split('\n')
+            versions = {'cassandra': versions_output[0].split()[2]}
+        else:
+            versions_output = self.db_cluster.nodes[0].remoter.run('rpm -qa | grep scylla').stdout.split('\n')
+            versions = {}
+            for line in versions_output:
+                for package in ['scylla-jmx', 'scylla-server', 'scylla-tools']:
+                    match = re.search('(%s-(\S+)-(0.)?([0-9]{8,8}).(\w+).)' % package, line)
+                    if match:
+                        versions[package] = {'version': match.group(2), 'date': match.group(4),
+                                                          'commit_id': match.group(5)}
         metrics['versions'] = versions
 
         # we use cmds. the last on is a stress, others are presetup
@@ -135,6 +138,10 @@ class PerformanceRegressionTest(ClusterTester):
         metrics['test_details']['test_name'] = self.params.id.name
         metrics['test_details']['sct_git_commit'] = \
             subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip()
+        if os.environ['JOB_NAME']:
+            metrics['test_details']['job_name'] = os.environ['JOB_NAME']
+            metrics['test_details']['job_url'] = os.environ['BUILD_URL']
+
         metrics['results']['stats'] = results
 
         if 'es_password' in metrics['setup_details']:
